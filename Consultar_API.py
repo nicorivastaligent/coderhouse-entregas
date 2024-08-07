@@ -15,12 +15,16 @@ df = pd.DataFrame(data_json)
 df['date_time'] = datetime.now()
 df_final = df[['id', 'name', 'priceUsd', 'date_time']]
 
+credentials = pd.read_csv('CREDENTIALS.csv', delimiter=',')
+DB_USER = credentials['DB_USER'][0]
+DB_PASS = credentials['DB_PASSWORD'][0]
+
 try:
     conn = psycopg2.connect(
         host='data-engineer-cluster.cyhh5bfevlmn.us-east-1.redshift.amazonaws.com',
         dbname='data-engineer-database',
-        user='nicolas_rivas_coderhouse',
-        password='hxA293BQGg',
+        user=DB_USER,
+        password=DB_PASS,
         port='5439'
     )
 except Exception as e:

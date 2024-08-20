@@ -19,31 +19,21 @@ credentials = pd.read_csv('CREDENTIALS.csv', delimiter=',')
 DB_USER = credentials['DB_USER'][0]
 DB_PASS = credentials['DB_PASSWORD'][0]
 
-try:
-    conn = psycopg2.connect(
-        host='data-engineer-cluster.cyhh5bfevlmn.us-east-1.redshift.amazonaws.com',
-        dbname='data-engineer-database',
-        user=DB_USER,
-        password=DB_PASS,
-        port='5439'
-    )
-except Exception as e:
-    print("Unable to connect to Redshift.")
-    print(e)
+conn = psycopg2.connect(
+    host='data-engineer-cluster.cyhh5bfevlmn.us-east-1.redshift.amazonaws.com',
+    dbname='data-engineer-database',
+    user=DB_USER,
+    password=DB_PASS,
+    port='5439'
+)
 
-try:
-    cur = conn.cursor()
-    table_name = 'cripto_price_history'
-    columns = ['id', 'name', 'price', 'date_time']
-    values = [tuple(x) for x in df_final.to_numpy()]
-    query = f"insert into {table_name} ({','.join(columns)}) values%s"
-    cur.execute("BEGIN")
-    execute_values(cur,query,values)
-    
-except Exception as e:
-    conn.rollback()
-    print('Unable to execute query.')
-    print(e)
+cur = conn.cursor()
+table_name = 'cripto_price_history'
+columns = ['id', 'name', 'price', 'date_time']
+values = [tuple(x) for x in df_final.to_numpy()]
+query = f"insert into {table_name} ({','.join(columns)}) values%s"
+cur.execute("BEGIN")
+execute_values(cur,query,values)
 
 cur.execute("COMMIT")
 cur.close()

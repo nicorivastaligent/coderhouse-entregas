@@ -39,6 +39,7 @@ conn = psycopg2.connect(
 ) 
 
 ##Creo el cursos, armo la tabla, convierto los datos en tuplpas para  luego armar la query y ejecutarla
+##Por la naturaleza del formato de los datos (clave prima = 'id|fecha hh:mm:ss') nunca se repetira informacion en las ejecuciones.
 cur = conn.cursor()
 table_name = 'cripto_price_history'
 columns = ['id', 'name', 'price', 'date_time', 'key_id_date_time']
